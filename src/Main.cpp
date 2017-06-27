@@ -1,7 +1,9 @@
 // main.cpp
 #include "Arduino.h"
-#include "Waveforms.h"
+#include "..\lib\LIDARLite.h"
+#include "..\lib\wire.h"
 #include "Func.h"
+#include "Waveforms.h"
 
 int i = 0;
 int sampleTime;
