@@ -3,9 +3,6 @@
 #include "Waveforms.h"
 #define oneHzSample 1000000/maxSamplesNum	// sample for the 1Hz signal expressed in microseconds
 
-const int button0 = 2, button1 = 3;
-volatile int wave0 = 0, wave1 = 0;
-
 int i = 0;
 int sample;
 
@@ -33,18 +30,4 @@ void loop() {
 	i = 0;
 
 	delayMicroseconds(sample); // Hold the sample value for the sample time
-}
-
-// function hooked to the interrupt on digital pin 2
-void wave0Select() {
-	wave0++;
-	if(wave0 == 4)
-	wave0 = 0;
-}
-
-// function hooked to the interrupt on digital pin 3
-void wave1Select() {
-	wave1++;
-	if(wave1 == 4)
-	wave1 = 0;
 }
