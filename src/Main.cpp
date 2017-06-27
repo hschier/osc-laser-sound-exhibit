@@ -6,25 +6,15 @@
 #include "Waveforms.h"
 
 int i = 0;
-<<<<<<< HEAD
-int sample;
-=======
 int sampleTime;
 float distFromFloor;
->>>>>>> remove-analog-read
 
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
 	analogReadResolution(12); // set the analog input resolution to 12 bit
-<<<<<<< HEAD
-
-	attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
-	attachInterrupt(button1, wave1Select, RISING); // Interrupt attached to the button connected to pin 3
-=======
 	distFromFloor = LIDARread();
 	//attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
 	//attachInterrupt(button1, wave1Select, RISING); // Interrupt attached to the button connected to pin 3
->>>>>>> remove-analog-read
 }
 
 void loop() {
