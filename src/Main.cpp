@@ -7,7 +7,7 @@
 
 int i = 0;
 int sampleTime;
-int distFromFloor;
+float distFromFloor;
 
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)

@@ -1,4 +1,6 @@
 #ifndef Func_h
 #define Func_h
-    LIDARread();
+float LIDARread() {
+    return 0.0;
+}
 #endif
