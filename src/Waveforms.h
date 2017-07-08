@@ -4,22 +4,6 @@
 
 #define maxWaveform 4
 #define maxSamplesNum 120
-const int button0 = 2, button1 = 3;
-volatile int wave0 = 0, wave1 = 0;
-
-// function hooked to the interrupt on digital pin 2
-void wave0Select() {
-	wave0++;
-	if(wave0 == 4)
-	wave0 = 0;
-}
-
-// function hooked to the interrupt on digital pin 3
-void wave1Select() {
-	wave1++;
-	if(wave1 == 4)
-	wave1 = 0;
-}
 
 static int waveformsTable[maxWaveform][maxSamplesNum] = {
   // Sine wave
