@@ -21,7 +21,6 @@ void loop() {
 	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
 	i++;
 	if (i == maxSamplesNum) {
-		sampleTime =
 		i = 0;
 	}
 	delayMicroseconds(sampleTime); // Hold the sample value for the sample time
