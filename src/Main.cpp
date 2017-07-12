@@ -12,6 +12,9 @@ float distFromFloor;
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
 	analogReadResolution(12); // set the analog input resolution to 12 bit
+	LIDAR.begin(0, true);
+	LIDAR.configure(0);
+	delay(200);
 	distFromFloor = LIDARread();
 	//attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
 	//attachInterrupt(button1, wave1Select, RISING); // Interrupt attached to the button connected to pin 3
