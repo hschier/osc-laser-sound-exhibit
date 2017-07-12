@@ -17,17 +17,13 @@ void setup() {
 	distFromFloor = LIDARreadPWM();
 	delay(1);
 	pinMode(2, INPUT);
-	//attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
-	//attachInterrupt(button1, wave1Select, RISING); // Interrupt attached to the button connected to pin 3
+	attachInterrupt(2, LIDAR_Handler, CHANGE);
 }
 
 void loop() {
 	int last_time = micros();
 	while (1) {
-		Serial.print(LIDARreadPWM());
-		Serial.print(" ");
-		Serial.println(micros() - last_time);
-		last_time = micros();
+		Serial.println(Last_Reading);
 	}
 	int startTime = micros();
 	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
