@@ -20,10 +20,12 @@ void setup() {
 }
 
 void loop() {
+	int last_time = micros();
 	while (1) {
 		Serial.print(LIDARread());
 		Serial.print(" ");
-		Serial.println(micros());
+		Serial.println(micros()-last_time);
+		last_time = micros();
 	}
 	int startTime = micros();
 	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
