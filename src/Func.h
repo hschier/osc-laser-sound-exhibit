@@ -19,8 +19,8 @@ float LIDARread() {
 }
 
 void LIDARsetup() {
-    LIDAR.begin(1, 1);
-    LIDAR.configure(1);
+    LIDAR.begin(0, true);
+    LIDAR.configure(0);
 }
 
 #endif
