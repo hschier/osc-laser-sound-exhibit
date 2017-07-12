@@ -1,6 +1,8 @@
 #ifndef Func_h
 #define Func_h
 
+LIDARLite LIDAR;
+
 int LIDAR_read_count = 0;
 
 float LIDARread() {
@@ -13,6 +15,9 @@ float LIDARread() {
     }
 }
 
-
+void LIDARsetup() {
+    LIDAR.begin(0, true);
+	LIDAR.configure(0);
+}
 
 #endif

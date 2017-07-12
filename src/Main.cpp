@@ -5,8 +5,6 @@
 #include "Func.h"
 #include "Waveforms.h"
 
-LIDARLite LIDAR;
-
 int i = 0;
 float SPEED_OF_SOUND = 343.0;
 int sampleTime;
@@ -15,9 +13,8 @@ float distFromFloor;
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
 	analogReadResolution(12); // set the analog input resolution to 12 bit
-	LIDAR.begin(0, true);
-	LIDAR.configure(0);
 	Serial.begin(115200);
+	LIDARsetup();
 	delay(200);
 	distFromFloor = LIDARread();
 	//attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
