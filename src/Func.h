@@ -33,7 +33,9 @@ void LIDAR_Handler() {
     if (digitalRead(2)) {
         Rising_Edge_Time = micros();
     } else {
-        Last_Reading = micros() - Rising_Edge_Time;
+        if (micros() - Rising_Edge_Time > 200) {
+            Last_Reading = micros() - Rising_Edge_Time;
+        }
     }
 }
 
