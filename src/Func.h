@@ -1,7 +1,7 @@
 #ifndef Func_h
 #define Func_h
-#include "..\lib\wire.h"
-#include "..\lib\LIDARLite.h"
+#include "..\lib\Wire.h"
+#include "LIDARLite.h"
 
 LIDARLite LIDAR;
 
