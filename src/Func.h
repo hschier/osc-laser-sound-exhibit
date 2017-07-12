@@ -8,7 +8,6 @@ LIDARLite LIDAR;
 int LIDAR_read_count = 0;
 
 float LIDARread() {
-    return LIDAR.distance();
     LIDAR_read_count++;
     if (LIDAR_read_count > 99) {
         LIDAR_read_count = 0;
