@@ -1,7 +1,7 @@
 // main.cpp
 #include "Arduino.h"
-#include "..\lib\LIDARLite.h"
 #include "..\lib\wire.h"
+#include "..\lib\LIDARLite.h"
 #include "Func.h"
 #include "Waveforms.h"
 
