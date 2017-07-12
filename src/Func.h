@@ -6,6 +6,7 @@
 LIDARLite LIDAR;
 
 int LIDAR_read_count = 0;
+volatile int samplePos = 0;
 
 float LIDARread() {
     LIDAR_read_count++;
@@ -20,6 +21,10 @@ float LIDARread() {
 void LIDARsetup() {
     LIDAR.begin(0, true);
     LIDAR.configure(0);
+}
+
+void handler() {
+    
 }
 
 #endif

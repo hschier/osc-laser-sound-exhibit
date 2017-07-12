@@ -1,5 +1,6 @@
 // main.cpp
 #include "Arduino.h"
+#include "DueTimer.h"
 #include "Func.h"
 #include "Waveforms.h"
 
