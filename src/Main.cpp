@@ -15,6 +15,7 @@ void setup() {
 	analogReadResolution(12); // set the analog input resolution to 12 bit
 	LIDAR.begin(0, true);
 	LIDAR.configure(0);
+	Serial.begin(115200);
 	delay(200);
 	distFromFloor = LIDARread();
 	//attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
@@ -22,6 +23,9 @@ void setup() {
 }
 
 void loop() {
+	while (1) {
+		Serial.println(LIDARread());
+	}
 	int startTime = micros();
 	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
 	distFromFloor = 3.0;
