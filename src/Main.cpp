@@ -6,6 +6,7 @@
 #include "Waveforms.h"
 
 int i = 0;
+float SPEED_OF_SOUND = 343.0;
 int sampleTime;
 float distFromFloor;
 
@@ -21,11 +22,12 @@ void setup() {
 }
 
 void loop() {
+	int startTime = micros();
 	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
+	distFromFloor = 3.0;
+	sampleTime = ((distFromFloor/SPEED_OF_SOUND)/maxSamplesNum)*1000000.0;
 	i++;
-	if (i == maxSamplesNum) {
-		sampleTime =
+	if (i == maxSamplesNum)
 		i = 0;
-	}
-	delayMicroseconds(sampleTime); // Hold the sample value for the sample time
+	while(micros()-startTime < sampleTime); // Hold the sample value for the sample time
 }
