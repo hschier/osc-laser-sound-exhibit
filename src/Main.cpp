@@ -5,6 +5,8 @@
 #include "Func.h"
 #include "Waveforms.h"
 
+LIDARLite LIDAR;
+
 int i = 0;
 float SPEED_OF_SOUND = 343.0;
 int sampleTime;

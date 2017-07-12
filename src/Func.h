@@ -1,8 +1,6 @@
 #ifndef Func_h
 #define Func_h
 
-LIDARLite LIDAR;
-
 int LIDAR_read_count = 0;
 
 float LIDARread() {
