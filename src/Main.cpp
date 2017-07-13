@@ -27,12 +27,6 @@ void setup() {
 }
 
 void loop() {
-	uint32_t starttimeasdf = micros();
-	for (size_t p = 0; p < 1000; p++) {
-		Timer0.setFrequency(100.0);
-	}
-	Serial.println((micros()-starttimeasdf)/1000.0);
-	while(1);
 	uint32_t sum = 0;
 	for (uint32_t m = 0; m < r_b; m++) {
 		sum += readings[m];
