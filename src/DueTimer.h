@@ -42,10 +42,10 @@ protected:
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
-	static double _frequency[NUM_TIMERS];
+	static float _frequency[NUM_TIMERS];
 
 	// Picks the best clock to lower the error
-	static uint8_t bestClock(double frequency, uint32_t& retRC);
+	static uint8_t bestClock(float frequency, uint32_t& retRC);
 
   // Make Interrupt handlers friends, so they can use callbacks
   friend void TC0_Handler(void);
@@ -77,13 +77,13 @@ public:
 	DueTimer(unsigned short _timer);
 	DueTimer& attachInterrupt(void (*isr)());
 	DueTimer& detachInterrupt(void);
-	DueTimer& start(double microseconds = -1);
+	DueTimer& start(float microseconds = -1);
 	DueTimer& stop(void);
-	DueTimer& setFrequency(double frequency);
-	DueTimer& setPeriod(double microseconds);
+	DueTimer& setFrequency(float frequency);
+	DueTimer& setPeriod(float microseconds);
 
-	double getFrequency(void) const;
-	double getPeriod(void) const;
+	float getFrequency(void) const;
+	float getPeriod(void) const;
 };
 
 // Just to call Timer.getAvailable instead of Timer::getAvailable() :

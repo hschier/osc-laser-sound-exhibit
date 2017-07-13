@@ -41,7 +41,7 @@ const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
 #else
 	void (*DueTimer::callbacks[NUM_TIMERS])() = {};
 #endif
-double DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+float DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -63,7 +63,7 @@ DueTimer Timer8(8);
 
 DueTimer::DueTimer(unsigned short _timer) : timer(_timer){
 	/*
-		The constructor of the class DueTimer 
+		The constructor of the class DueTimer
 	*/
 }
 
@@ -102,7 +102,7 @@ DueTimer& DueTimer::detachInterrupt(void){
 	return *this;
 }
 
-DueTimer& DueTimer::start(double microseconds){
+DueTimer& DueTimer::start(float microseconds){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
@@ -110,13 +110,13 @@ DueTimer& DueTimer::start(double microseconds){
 
 	if(microseconds > 0)
 		setPeriod(microseconds);
-	
+
 	if(_frequency[timer] <= 0)
 		setFrequency(1);
 
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
-	
+
 	TC_Start(Timers[timer].tc, Timers[timer].channel);
 
 	return *this;
@@ -128,13 +128,13 @@ DueTimer& DueTimer::stop(void){
 	*/
 
 	NVIC_DisableIRQ(Timers[timer].irq);
-	
+
 	TC_Stop(Timers[timer].tc, Timers[timer].channel);
 
 	return *this;
 }
 
-uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
+uint8_t DueTimer::bestClock(float frequency, uint32_t& retRC){
 	/*
 		Pick the best Clock, thanks to Ogle Basil Hall!
 
@@ -175,7 +175,7 @@ uint8_t DueTimer::bestClock(double frequency, uint32_t& retRC){
 }
 
 
-DueTimer& DueTimer::setFrequency(double frequency){
+DueTimer& DueTimer::setFrequency(float frequency){
 	/*
 		Set the timer frequency (in Hz)
 	*/
@@ -192,7 +192,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	uint32_t rc = 0;
 	uint8_t clock;
 
-	// Tell the Power Management Controller to disable 
+	// Tell the Power Management Controller to disable
 	// the write protection of the (Timer/Counter) registers:
 	pmc_set_writeprotect(false);
 
@@ -204,16 +204,16 @@ DueTimer& DueTimer::setFrequency(double frequency){
 
 	switch (clock) {
 	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
-	    _frequency[timer] = (double)VARIANT_MCK / 2.0 / (double)rc;
+	    _frequency[timer] = (float)VARIANT_MCK / 2.0 / (float)rc;
 	    break;
 	  case TC_CMR_TCCLKS_TIMER_CLOCK2:
-	    _frequency[timer] = (double)VARIANT_MCK / 8.0 / (double)rc;
+	    _frequency[timer] = (float)VARIANT_MCK / 8.0 / (float)rc;
 	    break;
 	  case TC_CMR_TCCLKS_TIMER_CLOCK3:
-	    _frequency[timer] = (double)VARIANT_MCK / 32.0 / (double)rc;
+	    _frequency[timer] = (float)VARIANT_MCK / 32.0 / (float)rc;
 	    break;
 	  default: // TC_CMR_TCCLKS_TIMER_CLOCK4
-	    _frequency[timer] = (double)VARIANT_MCK / 128.0 / (double)rc;
+	    _frequency[timer] = (float)VARIANT_MCK / 128.0 / (float)rc;
 	    break;
 	}
 
@@ -231,18 +231,18 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	return *this;
 }
 
-DueTimer& DueTimer::setPeriod(double microseconds){
+DueTimer& DueTimer::setPeriod(float microseconds){
 	/*
 		Set the period of the timer (in microseconds)
 	*/
 
 	// Convert period in microseconds to frequency in Hz
-	double frequency = 1000000.0 / microseconds;	
+	float frequency = 1000000.0 / microseconds;
 	setFrequency(frequency);
 	return *this;
 }
 
-double DueTimer::getFrequency(void) const {
+float DueTimer::getFrequency(void) const {
 	/*
 		Get current time frequency
 	*/
@@ -250,7 +250,7 @@ double DueTimer::getFrequency(void) const {
 	return _frequency[timer];
 }
 
-double DueTimer::getPeriod(void) const {
+float DueTimer::getPeriod(void) const {
 	/*
 		Get current time period
 	*/
@@ -260,7 +260,7 @@ double DueTimer::getPeriod(void) const {
 
 
 /*
-	Implementation of the timer callbacks defined in 
+	Implementation of the timer callbacks defined in
 	arduino-1.5.2/hardware/arduino/sam/system/CMSIS/Device/ATMEL/sam3xa/include/sam3x8e.h
 */
 // Fix for compatibility with Servo library

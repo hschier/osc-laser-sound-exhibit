@@ -5,43 +5,43 @@
 #include "Waveforms.h"
 
 int i = 0;
-float SPEED_OF_SOUND = 343.0;
-int sampleTime;
+uint32_t SPEED_OF_SOUND = 343000; // in mm per second
 float distFromFloor;
+uint32_t lambda; // in mm
+uint32_t freq = 0; // frequency in mHz
+uint32_t lambda_time; // in uS
+float sample_freq; // in Hz
 
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
 	analogReadResolution(12); // set the analog input resolution to 12 bit
 	Serial.begin(115200);
-	LIDARsetup();
 	delay(200);
-	distFromFloor = LIDARread();
+	distFromFloor = LIDARreadPWM();
 	delay(1);
-	//attachInterrupt(button0, wave0Select, RISING); // Interrupt attached to the button connected to pin 2
-	//attachInterrupt(button1, wave1Select, RISING); // Interrupt attached to the button connected to pin 3
+	pinMode(2, INPUT);
+	attachInterrupt(2, LIDAR_Handler, CHANGE);
 }
 
 void loop() {
-	int last_time = micros();
-	int max_time = 0;
-	while (1) {
-		Serial.print(LIDARread());
-		Serial.print(" ");
-		for (size_t j = 0; j < 1000; j++) {
-			LIDARread();
-			if (micros() - last_time > max_time) {
-				max_time = micros() - last_time;
-			}
-			last_time = micros();
-		}
-		Serial.println(max_time);
+	uint32_t sum = 0;
+	for (uint32_t m = 0; m < r_b; m++) {
+		sum += readings[m];
 	}
-	int startTime = micros();
-	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
-	distFromFloor = 3.0;
-	sampleTime = ((distFromFloor/SPEED_OF_SOUND)/maxSamplesNum)*1000000.0;
-	i++;
-	if (i == maxSamplesNum)
-		i = 0;
-	while(micros()-startTime < sampleTime); // Hold the sample value for the sample time
+	lambda = sum / r_b;
+	Serial.print(lambda);
+	Serial.print(" ");
+	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
+	Serial.print(freq);
+	Serial.print(" ");
+	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
+	Serial.print(lambda_time);
+	Serial.print(" ");
+	sample_freq = ((float)(freq * maxSamplesNum)/1000.0);
+	Serial.print(sample_freq);
+	Serial.print(" ");
+	for (uint32_t k = 0; k < lambda / 25; k++) {
+		Serial.print("=");
+	}
+	Serial.println();
 }
