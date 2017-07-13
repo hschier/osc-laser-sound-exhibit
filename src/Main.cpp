@@ -7,7 +7,7 @@
 int i = 0;
 uint32_t SPEED_OF_SOUND = 343000; // in mm per second
 float distFromFloor;
-uint32_t lambda;
+uint32_t lambda; // in mm
 uint32_t freq = 0; // frequency in mHz
 uint32_t lambda_time; // in uS
 
@@ -30,7 +30,7 @@ void loop() {
 	lambda = sum / r_b;
 	Serial.print(lambda);
 	Serial.print(" ");
-	freq = 1000 * (SPEED_OF_SOUND / lambda); // mHz
+	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	Serial.print(freq);
 	Serial.print(" ");
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
