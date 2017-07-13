@@ -13,35 +13,54 @@ uint32_t lambda_time; // in uS
 float sample_freq; // in Hz
 
 void setup() {
-	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
+	analogWriteResolution(12); // set the analog output resolution to 12 bit
 	analogReadResolution(12); // set the analog input resolution to 12 bit
 	Serial.begin(115200);
 	delay(200);
 	distFromFloor = LIDARreadPWM();
 	delay(1);
 	pinMode(2, INPUT);
+	pinMode(13, OUTPUT);
 	attachInterrupt(2, LIDAR_Handler, CHANGE);
+	Timer0.attachInterrupt(TIMER_handler);
+	Timer0.start(20000); // 12 000 - 200 000
+	//8: 12 000 - 150268.3625
+	//2: 150268.375
 }
 
 void loop() {
+	uint32_t startt = micros();
+	for (size_t w = 0; w < 1000; w++) {
+		Timer0.start(10000);
+	}
+	Serial.print("start: ");
+	Serial.println((float)(micros()-startt)/1000.0);
+	while(1) {
+		Serial.println(dog);
+		dog = 0;
+		delay(1000);
+	}
 	uint32_t sum = 0;
 	for (uint32_t m = 0; m < r_b; m++) {
 		sum += readings[m];
 	}
 	lambda = sum / r_b;
+	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
+	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
+	sample_freq = ((float)(freq * maxSamplesNum)/1000.0);
+	/*
 	Serial.print(lambda);
 	Serial.print(" ");
-	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	Serial.print(freq);
 	Serial.print(" ");
-	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	Serial.print(lambda_time);
 	Serial.print(" ");
-	sample_freq = ((float)(freq * maxSamplesNum)/1000.0);
 	Serial.print(sample_freq);
 	Serial.print(" ");
 	for (uint32_t k = 0; k < lambda / 25; k++) {
 		Serial.print("=");
 	}
 	Serial.println();
+	*/
+
 }

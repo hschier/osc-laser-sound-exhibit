@@ -41,7 +41,7 @@ const DueTimer::Timer DueTimer::Timers[NUM_TIMERS] = {
 #else
 	void (*DueTimer::callbacks[NUM_TIMERS])() = {};
 #endif
-float DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+volatile float DueTimer::_frequency[NUM_TIMERS] = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 /*
 	Initializing all timers, so you can use them like this: Timer0.start();
@@ -102,17 +102,13 @@ DueTimer& DueTimer::detachInterrupt(void){
 	return *this;
 }
 
-DueTimer& DueTimer::start(float microseconds){
+DueTimer& DueTimer::start(uint32_t freq){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
 	*/
 
-	if(microseconds > 0)
-		setPeriod(microseconds);
-
-	if(_frequency[timer] <= 0)
-		setFrequency(1);
+	setFrequency(freq);
 
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
@@ -144,6 +140,7 @@ uint8_t DueTimer::bestClock(float frequency, uint32_t& retRC){
 		TIMER_CLOCK3	MCK / 32
 		TIMER_CLOCK4	MCK /128
 	*/
+	/*
 	const struct {
 		uint8_t flag;
 		uint8_t divisor;
@@ -153,7 +150,9 @@ uint8_t DueTimer::bestClock(float frequency, uint32_t& retRC){
 		{ TC_CMR_TCCLKS_TIMER_CLOCK3,  32 },
 		{ TC_CMR_TCCLKS_TIMER_CLOCK4, 128 }
 	};
+	*/
 	float ticks;
+	/*
 	float error;
 	int clkId = 3;
 	int bestClock = 3;
@@ -169,28 +168,34 @@ uint8_t DueTimer::bestClock(float frequency, uint32_t& retRC){
 			bestError = error;
 		}
 	} while (clkId-- > 0);
-	ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[bestClock].divisor;
+	*/
+	//ticks = (float) VARIANT_MCK / frequency / (float) clockConfig[bestClock].divisor;
+	ticks = (float) VARIANT_MCK / frequency / 8.0;
 	retRC = (uint32_t) round(ticks);
-	return clockConfig[bestClock].flag;
+	//Serial.print("retrc:");
+	//Serial.print(retRC);
+	//Serial.print(" flag:");
+	//Serial.println(clockConfig[bestClock].flag);
+	//return clockConfig[bestClock].flag;
+	return (uint8_t) 1;
 }
 
 
-DueTimer& DueTimer::setFrequency(float frequency){
+DueTimer& DueTimer::setFrequency(uint32_t frequency){
 	/*
 		Set the timer frequency (in Hz)
 	*/
 
 	// Prevent negative frequencies
-	if(frequency <= 0) { frequency = 1; }
+	//if(frequency <= 0) { frequency = 1; }
 
 	// Remember the frequency — see below how the exact frequency is reported instead
 	//_frequency[timer] = frequency;
 
 	// Get current timer configuration
 	Timer t = Timers[timer];
-
-	uint32_t rc = 0;
-	uint8_t clock;
+	uint32_t rc = VARIANT_MCK / (frequency * 8);
+	uint8_t clock = 1;
 
 	// Tell the Power Management Controller to disable
 	// the write protection of the (Timer/Counter) registers:
@@ -198,24 +203,6 @@ DueTimer& DueTimer::setFrequency(float frequency){
 
 	// Enable clock for the timer
 	pmc_enable_periph_clk((uint32_t)t.irq);
-
-	// Find the best clock for the wanted frequency
-	clock = bestClock(frequency, rc);
-
-	switch (clock) {
-	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
-	    _frequency[timer] = (float)VARIANT_MCK / 2.0 / (float)rc;
-	    break;
-	  case TC_CMR_TCCLKS_TIMER_CLOCK2:
-	    _frequency[timer] = (float)VARIANT_MCK / 8.0 / (float)rc;
-	    break;
-	  case TC_CMR_TCCLKS_TIMER_CLOCK3:
-	    _frequency[timer] = (float)VARIANT_MCK / 32.0 / (float)rc;
-	    break;
-	  default: // TC_CMR_TCCLKS_TIMER_CLOCK4
-	    _frequency[timer] = (float)VARIANT_MCK / 128.0 / (float)rc;
-	    break;
-	}
 
 	// Set up the Timer in waveform mode which creates a PWM
 	// in UP mode with automatic trigger on RC Compare

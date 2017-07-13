@@ -42,7 +42,7 @@ protected:
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
-	static float _frequency[NUM_TIMERS];
+	static volatile float _frequency[NUM_TIMERS];
 
 	// Picks the best clock to lower the error
 	static uint8_t bestClock(float frequency, uint32_t& retRC);
@@ -77,9 +77,9 @@ public:
 	DueTimer(unsigned short _timer);
 	DueTimer& attachInterrupt(void (*isr)());
 	DueTimer& detachInterrupt(void);
-	DueTimer& start(float microseconds = -1);
+	DueTimer& start(uint32_t frequency);
 	DueTimer& stop(void);
-	DueTimer& setFrequency(float frequency);
+	DueTimer& setFrequency(uint32_t frequency);
 	DueTimer& setPeriod(float microseconds);
 
 	float getFrequency(void) const;

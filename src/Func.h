@@ -2,8 +2,12 @@
 #define Func_h
 #include "..\lib\Wire.h"
 #include "LIDARLite.h"
+#include "DueTimer.h"
 
 LIDARLite LIDAR;
+
+volatile uint32_t dog = 0;
+volatile float timer0freq = 1;
 
 int LIDAR_read_count = 0;
 volatile int samplePos = 0;
@@ -59,7 +63,8 @@ void LIDAR_Handler() {
 }
 
 void TIMER_handler() {
-
+    Timer0.start(10000);
+    dog++;
 }
 
 #endif
