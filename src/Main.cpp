@@ -5,10 +5,10 @@
 #include "Waveforms.h"
 
 int i = 0;
-float SPEED_OF_SOUND = 343000.0; // in mm per second
+uint32_t SPEED_OF_SOUND = 343000; // in mm per second
 float distFromFloor;
 uint32_t lambda;
-float freq = 0; // frequency
+uint32_t freq = 0; // frequency in mHz
 uint32_t lambda_time; // in uS
 
 void setup() {
@@ -23,17 +23,17 @@ void setup() {
 }
 
 void loop() {
-	int sum = 0;
-	for (size_t m = 0; m < r_b; m++) {
+	uint32_t sum = 0;
+	for (uint32_t m = 0; m < r_b; m++) {
 		sum += readings[m];
 	}
-	lambda = ((uint32_t) sum) / r_b;
+	lambda = sum / r_b;
 	Serial.print(lambda);
 	Serial.print(" ");
-	freq = SPEED_OF_SOUND / (float) lambda;
+	freq = 1000 * (SPEED_OF_SOUND / lambda); // mHz
 	Serial.print(freq);
 	Serial.print(" ");
-	lambda_time = (uint32_t) ((1000000.0 * lambda) / SPEED_OF_SOUND);
+	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	Serial.print(lambda_time);
 	Serial.print(" ");
 	for (uint32_t k = 0; k < lambda / 25; k++) {
