@@ -24,7 +24,11 @@ void loop() {
 	while (1) {
 		Serial.print(Last_Reading);
 		Serial.print(" ");
-		Serial.println(micros());
+		Serial.print(micros());
+		for (size_t k = 0; k < Last_Reading/500; k++) {
+			Serial.print("=");
+		}
+		Serial.println();
 	}
 	int startTime = micros();
 	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
