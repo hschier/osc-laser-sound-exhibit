@@ -6,8 +6,8 @@
 
 LIDARLite LIDAR;
 
-volatile uint32_t dog = 0;
-volatile float timer0freq = 1;
+volatile bool valid_target = 0;
+volatile uint32_t floor_dist = 0;
 
 int LIDAR_read_count = 0;
 volatile int samplePos = 0;
@@ -22,7 +22,7 @@ volatile uint32_t readings[r_b];
 volatile uint32_t r100_i = 0;
 volatile uint32_t r100_c = 0; // readings since last write to readings100
 #define r100_b 30
-#define r100_freq 500
+#define r100_freq 200
 volatile uint32_t readings100[r100_b];
 
 int LIDARreadI2C() {
@@ -44,26 +44,7 @@ int LIDARreadPWM() {
     return pulseIn(2, HIGH);
 }
 
-void LIDAR_Handler() {
-    if (digitalRead(2)) {
-        Rising_Edge_Time = micros();
-    } else if (micros() - Rising_Edge_Time > 200
-            && micros() - Rising_Edge_Time < 8000) {
-        r_i++;
-        if (r_i >= r_b) r_i = 0;
-        readings[r_i] = micros() - Rising_Edge_Time;
-
-        r100_c++;
-        if (r100_c >= r100_freq) {
-            r100_c = 0;
-            r100_i++;
-            if (r100_i >= r100_b) r100_i = 0;
-            readings100[r100_i] = readings[r_i];
-        }
-    }
-}
-
-uint32_t findFloor(){
+uint32_t Floor_dist(){
     uint32_t floorDepth = 0;
     for (uint32_t v = 0; v < r100_b; v++) {
         if (readings100[v] > floorDepth) {
@@ -71,6 +52,30 @@ uint32_t findFloor(){
         }
     }
     return floorDepth;
+}
+
+void LIDAR_Handler() {
+    uint32_t pulsewidth = micros() - Rising_Edge_Time;
+    if (digitalRead(2)) {
+        Rising_Edge_Time = micros();
+    } else if (pulsewidth > 200 && pulsewidth < 8000) {
+        floor_dist = Floor_dist();
+        if (pulsewidth < floor_dist - 200) {
+            valid_target = 1;
+            r_i++;
+            if (r_i >= r_b) r_i = 0;
+            readings[r_i] = pulsewidth;
+        } else {
+            valid_target = 0;
+        }
+        r100_c++;
+        if (r100_c >= r100_freq) {
+            r100_c = 0;
+            r100_i++;
+            if (r100_i >= r100_b) r100_i = 0;
+            readings100[r100_i] = pulsewidth;
+        }
+    }
 }
 
 #endif
