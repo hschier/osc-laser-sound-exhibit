@@ -5,6 +5,7 @@
 
 LIDARLite LIDAR;
 
+uint32_t ledstate = 0;
 int LIDAR_read_count = 0;
 volatile int samplePos = 0;
 volatile uint32_t Rising_Edge_Time = 0;
@@ -59,7 +60,8 @@ void LIDAR_Handler() {
 }
 
 void TIMER_handler() {
-
+    ledstate = !ledstate;
+    digitalWrite(13, ledstate);
 }
 
 #endif
