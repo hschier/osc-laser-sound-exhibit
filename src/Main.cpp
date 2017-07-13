@@ -22,10 +22,14 @@ void setup() {
 
 void loop() {
 	while (1) {
-		Serial.print(Last_Reading);
+		float sum = 0;
+		for (size_t m = 0; m < 10; m++) {
+			sum += readings[m];
+		}
+		Serial.print(sum/10);
 		Serial.print(" ");
 		Serial.print(micros());
-		for (size_t k = 0; k < Last_Reading/500; k++) {
+		for (uint32_t k = 0; k < (uint32_t) (sum / 100.0); k++) {
 			Serial.print("=");
 		}
 		Serial.println();
