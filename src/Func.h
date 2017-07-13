@@ -1,3 +1,4 @@
+// Func.h
 #ifndef Func_h
 #define Func_h
 #include "..\lib\Wire.h"
@@ -14,14 +15,14 @@ volatile uint32_t Rising_Edge_Time = 0;
 
 // hold the past few readings
 volatile uint32_t r_i = 0;
-#define r_b 5
+#define r_b 3
 volatile uint32_t readings[r_b];
 
 // hold 10 (r100_b) readings, but only take 1 reading out of every 100 (r100_freq)
 volatile uint32_t r100_i = 0;
 volatile uint32_t r100_c = 0; // readings since last write to readings100
-#define r100_b 10
-#define r100_freq 100
+#define r100_b 30
+#define r100_freq 500
 volatile uint32_t readings100[r100_b];
 
 int LIDARreadI2C() {
@@ -46,7 +47,8 @@ int LIDARreadPWM() {
 void LIDAR_Handler() {
     if (digitalRead(2)) {
         Rising_Edge_Time = micros();
-    } else if (micros() - Rising_Edge_Time > 200) {
+    } else if (micros() - Rising_Edge_Time > 200
+            && micros() - Rising_Edge_Time < 8000) {
         r_i++;
         if (r_i >= r_b) r_i = 0;
         readings[r_i] = micros() - Rising_Edge_Time;
@@ -59,6 +61,16 @@ void LIDAR_Handler() {
             readings100[r100_i] = readings[r_i];
         }
     }
+}
+
+uint32_t findFloor(){
+    uint32_t floorDepth = 0;
+    for (uint32_t v = 0; v < r100_b; v++) {
+        if (readings100[v] > floorDepth) {
+            floorDepth = readings100[v];
+        }
+    }
+    return floorDepth;
 }
 
 #endif
