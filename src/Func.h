@@ -2,7 +2,6 @@
 #define Func_h
 #include "..\lib\Wire.h"
 #include "LIDARLite.h"
-#include "DueTimer.h"
 
 LIDARLite LIDAR;
 
@@ -60,11 +59,6 @@ void LIDAR_Handler() {
             readings100[r100_i] = readings[r_i];
         }
     }
-}
-
-void TIMER_handler() {
-    Timer0.start(10000);
-    dog++;
 }
 
 #endif
