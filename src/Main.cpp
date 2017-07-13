@@ -23,7 +23,7 @@ void setup() {
 	pinMode(13, OUTPUT);
 	attachInterrupt(2, LIDAR_Handler, CHANGE);
 	Timer0.attachInterrupt(TIMER_handler);
-	Timer0.start(5000000.0);
+	Timer0.start(1.0);
 }
 
 void loop() {
