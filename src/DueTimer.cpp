@@ -102,14 +102,14 @@ DueTimer& DueTimer::detachInterrupt(void){
 	return *this;
 }
 
-DueTimer& DueTimer::start(float microseconds){
+DueTimer& DueTimer::start(float freq){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
 	*/
 
-	if(microseconds > 0)
-		setPeriod(microseconds);
+	if(freq > 0)
+		setFrequency(freq);
 
 	if(_frequency[timer] <= 0)
 		setFrequency(1);
