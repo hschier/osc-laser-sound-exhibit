@@ -2,6 +2,7 @@
 #define Func_h
 #include "..\lib\Wire.h"
 #include "LIDARLite.h"
+#include "DueTimer.h"
 
 LIDARLite LIDAR;
 
@@ -59,7 +60,7 @@ void LIDAR_Handler() {
 }
 
 void TIMER_handler() {
-
+    Timer0.setFrequency(2*Timer0.getFrequency());
 }
 
 #endif

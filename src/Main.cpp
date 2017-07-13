@@ -27,6 +27,7 @@ void setup() {
 }
 
 void loop() {
+	while(1) Serial.println(Timer0.getFrequency());
 	uint32_t sum = 0;
 	for (uint32_t m = 0; m < r_b; m++) {
 		sum += readings[m];
