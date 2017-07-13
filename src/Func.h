@@ -6,6 +6,9 @@
 
 LIDARLite LIDAR;
 
+volatile uint32_t dog = 0;
+volatile float timer0freq = 1;
+
 int LIDAR_read_count = 0;
 volatile int samplePos = 0;
 volatile uint32_t Rising_Edge_Time = 0;
@@ -60,7 +63,8 @@ void LIDAR_Handler() {
 }
 
 void TIMER_handler() {
-    Timer0.setFrequency(2*Timer0.getFrequency());
+    //Timer0.setFrequency(timer0freq);
+    dog++;
 }
 
 #endif

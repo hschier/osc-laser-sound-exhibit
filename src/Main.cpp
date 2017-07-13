@@ -23,11 +23,14 @@ void setup() {
 	pinMode(13, OUTPUT);
 	attachInterrupt(2, LIDAR_Handler, CHANGE);
 	Timer0.attachInterrupt(TIMER_handler);
-	Timer0.start(100.0);
+	Timer0.start(12000);
 }
 
 void loop() {
-	while(1) Serial.println(Timer0.getFrequency());
+	while(1) {
+		Serial.println(dog);
+		delay(1000);
+	}
 	uint32_t sum = 0;
 	for (uint32_t m = 0; m < r_b; m++) {
 		sum += readings[m];

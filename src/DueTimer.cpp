@@ -180,6 +180,9 @@ DueTimer& DueTimer::setFrequency(float frequency){
 		Set the timer frequency (in Hz)
 	*/
 
+	// Prevent negative frequencies
+	if(frequency <= 0) { frequency = 1; }
+
 	// Remember the frequency — see below how the exact frequency is reported instead
 	//_frequency[timer] = frequency;
 
@@ -196,7 +199,27 @@ DueTimer& DueTimer::setFrequency(float frequency){
 	// Enable clock for the timer
 	pmc_enable_periph_clk((uint32_t)t.irq);
 
-    _frequency[timer] = (float)VARIANT_MCK / 2.0 / (float)rc;
+	clock = bestClock(frequency, rc);
+
+	switch (clock) {
+	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
+	    _frequency[timer] = (double)VARIANT_MCK / 2.0 / (double)rc;
+		Serial.println(2.0);
+	    break;
+	  case TC_CMR_TCCLKS_TIMER_CLOCK2:
+	    _frequency[timer] = (double)VARIANT_MCK / 8.0 / (double)rc;
+		Serial.println(8.0);
+	    break;
+	  case TC_CMR_TCCLKS_TIMER_CLOCK3:
+	    _frequency[timer] = (double)VARIANT_MCK / 32.0 / (double)rc;
+		Serial.println(32.0);
+	    break;
+	  default: // TC_CMR_TCCLKS_TIMER_CLOCK4
+	    _frequency[timer] = (double)VARIANT_MCK / 128.0 / (double)rc;
+		Serial.println(128.0);
+	    break;
+	}
+
 
 	// Set up the Timer in waveform mode which creates a PWM
 	// in UP mode with automatic trigger on RC Compare
