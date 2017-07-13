@@ -6,7 +6,7 @@
 
 int i = 0;
 float SPEED_OF_SOUND = 343.0;
-int sampleTime;
+uint32_t sampleTime;
 float distFromFloor;
 
 void setup() {
@@ -23,13 +23,13 @@ void setup() {
 void loop() {
 	while (1) {
 		float sum = 0;
-		for (size_t m = 0; m < 10; m++) {
+		for (size_t m = 0; m < 100; m++) {
 			sum += readings[m];
 		}
-		Serial.print(sum/10);
+		Serial.print(sum/100.0);
 		Serial.print(" ");
 		Serial.print(micros());
-		for (uint32_t k = 0; k < (uint32_t) (sum / 100.0); k++) {
+		for (uint32_t k = 0; k < (uint32_t) (sum / 10000.0); k++) {
 			Serial.print("=");
 		}
 		Serial.println();

@@ -9,9 +9,11 @@ int LIDAR_read_count = 0;
 volatile int samplePos = 0;
 volatile uint32_t Rising_Edge_Time = 0;
 volatile uint32_t r_i = 0;
-volatile uint32_t readings[10];
+#define r_b 100
+volatile uint32_t readings[r_b];
 volatile uint32_t r10_i = 0;
-volatile uint32_t readings10[10];
+#define r10_b 10
+volatile uint32_t readings10[r10_b];
 
 int LIDARreadI2C() {
     LIDAR_read_count++;
@@ -38,10 +40,10 @@ void LIDAR_Handler() {
     } else {
         if (micros() - Rising_Edge_Time > 200) {
             readings[r_i] = micros() - Rising_Edge_Time;
-            if (r_i >= 9) {  // increment or reset r_i
+            if (r_i >= r_b-1) {  // increment or reset r_i
                 r_i = 0;
-                readings10[r10_i] = readings[9];
-                (r10_i >= 9) ? (r10_i = 0) : r10_i++;
+                readings10[r10_i] = readings[r_b-1];
+                (r10_i >= r10_b-1) ? (r10_i = 0) : r10_i++;
             } else {
                 r_i++;
             }
