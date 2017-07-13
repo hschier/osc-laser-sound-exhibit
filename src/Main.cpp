@@ -8,6 +8,7 @@ int i = 0;
 float SPEED_OF_SOUND = 343.0;
 uint32_t sampleTime;
 float distFromFloor;
+uint32_t lambda;
 
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
@@ -26,10 +27,11 @@ void loop() {
 		for (size_t m = 0; m < r_b; m++) {
 			sum += readings[m];
 		}
-		Serial.print(sum/(float) r_b);
+		lambda = ((uint32_t) sum) / r_b;
+		Serial.print(lambda);
 		Serial.print(" ");
-		Serial.print(micros());
-		for (uint32_t k = 0; k < (uint32_t) (sum / (100.0 * (float) r_b)); k++) {
+		//Serial.print(micros());
+		for (uint32_t k = 0; k < lambda / 25; k++) {
 			Serial.print("=");
 		}
 		Serial.println();
