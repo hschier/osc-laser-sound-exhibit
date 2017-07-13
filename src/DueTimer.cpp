@@ -200,7 +200,8 @@ DueTimer& DueTimer::setFrequency(float frequency){
 	pmc_enable_periph_clk((uint32_t)t.irq);
 
 	// Find the best clock for the wanted frequency
-	clock = bestClock(frequency, rc);
+	//clock = bestClock(frequency, rc);
+	clock = TC_CMR_TCCLKS_TIMER_CLOCK1;
 
 	switch (clock) {
 	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
