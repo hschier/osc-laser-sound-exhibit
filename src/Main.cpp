@@ -5,10 +5,11 @@
 #include "Waveforms.h"
 
 int i = 0;
-float SPEED_OF_SOUND = 343.0;
-uint32_t sampleTime;
+float SPEED_OF_SOUND = 343000.0; // in mm per second
 float distFromFloor;
 uint32_t lambda;
+float freq = 0; // frequency
+uint32_t lambda_time; // in uS
 
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
@@ -22,26 +23,21 @@ void setup() {
 }
 
 void loop() {
-	while (1) {
-		float sum = 0;
-		for (size_t m = 0; m < r_b; m++) {
-			sum += readings[m];
-		}
-		lambda = ((uint32_t) sum) / r_b;
-		Serial.print(lambda);
-		Serial.print(" ");
-		//Serial.print(micros());
-		for (uint32_t k = 0; k < lambda / 25; k++) {
-			Serial.print("=");
-		}
-		Serial.println();
+	int sum = 0;
+	for (size_t m = 0; m < r_b; m++) {
+		sum += readings[m];
 	}
-	int startTime = micros();
-	analogWrite(DAC0, waveformsTable[0][i]); // write the selected waveform on DAC0
-	distFromFloor = 3.0;
-	sampleTime = ((distFromFloor/SPEED_OF_SOUND)/maxSamplesNum)*1000000.0;
-	i++;
-	if (i == maxSamplesNum)
-		i = 0;
-	while(micros()-startTime < sampleTime); // Hold the sample value for the sample time
+	lambda = ((uint32_t) sum) / r_b;
+	Serial.print(lambda);
+	Serial.print(" ");
+	freq = SPEED_OF_SOUND / (float) lambda;
+	Serial.print(freq);
+	Serial.print(" ");
+	lambda_time = (uint32_t) ((1000000.0 * lambda) / SPEED_OF_SOUND);
+	Serial.print(lambda_time);
+	Serial.print(" ");
+	for (uint32_t k = 0; k < lambda / 25; k++) {
+		Serial.print("=");
+	}
+	Serial.println();
 }
