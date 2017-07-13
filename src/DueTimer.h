@@ -77,9 +77,9 @@ public:
 	DueTimer(unsigned short _timer);
 	DueTimer& attachInterrupt(void (*isr)());
 	DueTimer& detachInterrupt(void);
-	DueTimer& start(float microseconds = -1);
+	DueTimer& start(uint32_t frequency);
 	DueTimer& stop(void);
-	DueTimer& setFrequency(float frequency);
+	DueTimer& setFrequency(uint32_t frequency);
 	DueTimer& setPeriod(float microseconds);
 
 	float getFrequency(void) const;

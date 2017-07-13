@@ -23,7 +23,7 @@ void setup() {
 	pinMode(13, OUTPUT);
 	attachInterrupt(2, LIDAR_Handler, CHANGE);
 	Timer0.attachInterrupt(TIMER_handler);
-	Timer0.start(200000); // 12 000 - 200 000
+	Timer0.start(20000); // 12 000 - 200 000
 	//8: 12 000 - 150268.3625
 	//2: 150268.375
 }
@@ -31,13 +31,14 @@ void setup() {
 void loop() {
 	uint32_t startt = micros();
 	for (size_t w = 0; w < 1000; w++) {
-		Timer0.start(200000);
+		Timer0.start(10000);
 	}
 	Serial.print("start: ");
 	Serial.println((float)(micros()-startt)/1000.0);
 	while(1) {
 		Serial.println(dog);
-		delay(5000);
+		dog = 0;
+		delay(1000);
 	}
 	uint32_t sum = 0;
 	for (uint32_t m = 0; m < r_b; m++) {

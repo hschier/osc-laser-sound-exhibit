@@ -63,7 +63,7 @@ void LIDAR_Handler() {
 }
 
 void TIMER_handler() {
-    //Timer0.start(200000);
+    Timer0.start(10000);
     dog++;
 }
 

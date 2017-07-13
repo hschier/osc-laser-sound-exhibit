@@ -102,17 +102,13 @@ DueTimer& DueTimer::detachInterrupt(void){
 	return *this;
 }
 
-DueTimer& DueTimer::start(float freq){
+DueTimer& DueTimer::start(uint32_t freq){
 	/*
 		Start the timer
 		If a period is set, then sets the period and start the timer
 	*/
 
-	if(freq > 0)
-		setFrequency(freq);
-
-	if(_frequency[timer] <= 0)
-		setFrequency(1);
+	setFrequency(freq);
 
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
@@ -185,7 +181,7 @@ uint8_t DueTimer::bestClock(float frequency, uint32_t& retRC){
 }
 
 
-DueTimer& DueTimer::setFrequency(float frequency){
+DueTimer& DueTimer::setFrequency(uint32_t frequency){
 	/*
 		Set the timer frequency (in Hz)
 	*/
@@ -198,7 +194,7 @@ DueTimer& DueTimer::setFrequency(float frequency){
 
 	// Get current timer configuration
 	Timer t = Timers[timer];
-	uint32_t rc = (uint32_t) VARIANT_MCK / ((uint32_t)frequency/8);
+	uint32_t rc = VARIANT_MCK / (frequency * 8);
 	uint8_t clock = 1;
 
 	// Tell the Power Management Controller to disable
@@ -207,8 +203,6 @@ DueTimer& DueTimer::setFrequency(float frequency){
 
 	// Enable clock for the timer
 	pmc_enable_periph_clk((uint32_t)t.irq);
-
-	_frequency[timer] = (float)VARIANT_MCK / 8.0 / (float)rc;
 
 	// Set up the Timer in waveform mode which creates a PWM
 	// in UP mode with automatic trigger on RC Compare
