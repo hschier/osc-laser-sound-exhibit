@@ -42,7 +42,7 @@ protected:
 
 	// Stores the object timer frequency
 	// (allows to access current timer period and frequency):
-	static float _frequency[NUM_TIMERS];
+	static volatile float _frequency[NUM_TIMERS];
 
 	// Picks the best clock to lower the error
 	static uint8_t bestClock(float frequency, uint32_t& retRC);
