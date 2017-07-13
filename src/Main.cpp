@@ -10,6 +10,7 @@ float distFromFloor;
 uint32_t lambda; // in mm
 uint32_t freq = 0; // frequency in mHz
 uint32_t lambda_time; // in uS
+float sample_freq; // in Hz
 
 void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit (4096 levels)
@@ -35,6 +36,9 @@ void loop() {
 	Serial.print(" ");
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	Serial.print(lambda_time);
+	Serial.print(" ");
+	sample_freq = ((float)(freq * maxSamplesNum)/1000.0);
+	Serial.print(sample_freq);
 	Serial.print(" ");
 	for (uint32_t k = 0; k < lambda / 25; k++) {
 		Serial.print("=");
