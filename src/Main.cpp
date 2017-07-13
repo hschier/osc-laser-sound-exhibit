@@ -23,13 +23,13 @@ void setup() {
 void loop() {
 	while (1) {
 		float sum = 0;
-		for (size_t m = 0; m < 100; m++) {
+		for (size_t m = 0; m < r_b; m++) {
 			sum += readings[m];
 		}
-		Serial.print(sum/100.0);
+		Serial.print(sum/(float) r_b);
 		Serial.print(" ");
 		Serial.print(micros());
-		for (uint32_t k = 0; k < (uint32_t) (sum / 10000.0); k++) {
+		for (uint32_t k = 0; k < (uint32_t) (sum / (100.0 * (float) r_b)); k++) {
 			Serial.print("=");
 		}
 		Serial.println();
