@@ -18,6 +18,7 @@ void setup() {
 	delay(1);
 	pinMode(2, INPUT);
 	pinMode(13, OUTPUT);
+	pinMode(SWITCH_1_WAVETYPE, INPUT);
 	pinMode(SWITCH_8_FLOORMODE, INPUT);
 	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
 }
@@ -30,7 +31,8 @@ void loop() {
 		i++;
 		if (i >= maxSamplesNum) i = 0;
 	}
-	analogWrite(DAC1, waveformsTable[1][i]);
+	// change waveform based on switch position
+	analogWrite(DAC1, waveformsTable[digitalRead(SWITCH_1_WAVETYPE)][i]);
 	lambda = (sum / r_b);
 	// if switch 8 is in the off position, then use from-floor mode (default)
 	if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
