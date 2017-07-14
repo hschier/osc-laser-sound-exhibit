@@ -58,7 +58,7 @@ void LIDAR_Handler() {
     uint32_t pulsewidth = micros() - Rising_Edge_Time;
     if (digitalRead(2)) {
         Rising_Edge_Time = micros();
-    } else if (pulsewidth > 200 && pulsewidth < 8000) {
+    } else if (pulsewidth > 150 && pulsewidth < 8000) {
         floor_dist = Floor_dist();
         if (pulsewidth < floor_dist - 200) {
             valid_target = 1;

@@ -22,22 +22,17 @@ void setup() {
 }
 
 void loop() {
-	if (valid_target) {
-		uint32_t sample_start = micros();
-		uint32_t sum = 0;
-		for (uint32_t m = 0; m < r_b; m++) {
-			sum += readings[m];
-		}
+	uint32_t sample_start = micros();
+	uint32_t sum = 0;
+	for (uint32_t m = 0; m < r_b; m++) sum += readings[m];
+	if (valid_target || i > 0) { // advance if valid_target OR finish up wave
 		i++;
 		if (i >= maxSamplesNum) i = 0;
-		analogWrite(DAC1, waveformsTable[1][i]);
-		lambda = sum / r_b;
-		freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
-		lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
-		sample_time = lambda_time / 120;
-		while (micros() - sample_start <= sample_time); // wait for next sample
-	} else {
-		i = 0;
-		analogWrite(DAC1, waveformsTable[1][i]);
 	}
+	analogWrite(DAC1, waveformsTable[1][i]);
+	lambda = floor_dist - (sum / r_b);
+	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
+	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
+	sample_time = lambda_time / 120;
+	while (micros() - sample_start <= sample_time); // wait for next sample
 }
