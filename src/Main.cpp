@@ -18,7 +18,7 @@ void setup() {
 	delay(1);
 	pinMode(2, INPUT);
 	pinMode(13, OUTPUT);
-	pinMode(SWITCH_8_FLOORMODE, OUTPUT);
+	pinMode(SWITCH_8_FLOORMODE, INPUT);
 	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
 }
 
