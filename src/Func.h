@@ -5,7 +5,7 @@
 #include "LIDARLite.h"
 
 // DIP-8 Switch pins
-#define SWITCH_1_WAVETYPE 56
+#define SWITCH_1_WAVETYPE 46
 #define SWITCH_2_ 44
 #define SWITCH_3_ 42
 #define SWITCH_4_ 40
