@@ -4,6 +4,18 @@
 #include "..\lib\Wire.h"
 #include "LIDARLite.h"
 
+// DIP-8 Switch pins
+#define SWITCH_1_WAVETYPE 56
+#define SWITCH_2_ 44
+#define SWITCH_3_ 42
+#define SWITCH_4_ 40
+#define SWITCH_5_ 38
+#define SWITCH_6_ 36
+#define SWITCH_7_ 34
+#define SWITCH_8_FLOORMODE 32
+
+#define LIDAR_PIN 2
+
 LIDARLite LIDAR;
 
 volatile bool valid_target = 0;

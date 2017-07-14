@@ -18,7 +18,8 @@ void setup() {
 	delay(1);
 	pinMode(2, INPUT);
 	pinMode(13, OUTPUT);
-	attachInterrupt(2, LIDAR_Handler, CHANGE);
+	pinMode(SWITCH_8_FLOORMODE, OUTPUT);
+	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
 }
 
 void loop() {
@@ -31,6 +32,7 @@ void loop() {
 	}
 	analogWrite(DAC1, waveformsTable[1][i]);
 	lambda = floor_dist - (sum / r_b);
+	if ()
 	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
