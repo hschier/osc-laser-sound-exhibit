@@ -56,14 +56,14 @@ int LIDARreadPWM() {
     return pulseIn(2, HIGH);
 }
 
-uint32_t Floor_dist(){
-    uint32_t floorDepth = 0;
+uint32_t Find_Floor_dist(){
+    uint32_t fd = 0;
     for (uint32_t v = 0; v < r100_b; v++) {
-        if (readings100[v] > floorDepth) {
-            floorDepth = readings100[v];
+        if (readings100[v] > fd) {
+            fd = readings100[v];
         }
     }
-    return floorDepth;
+    return fd;
 }
 
 void LIDAR_Handler() {
@@ -71,8 +71,8 @@ void LIDAR_Handler() {
     if (digitalRead(2)) {
         Rising_Edge_Time = micros();
     } else if (pulsewidth > 150 && pulsewidth < 8000) {
-        floor_dist = Floor_dist();
-        if (pulsewidth < floor_dist - 200) {
+        floor_dist = Find_Floor_dist();
+        if (pulsewidth < floor_dist - 150) {
             valid_target = 1;
             r_i++;
             if (r_i >= r_b) r_i = 0;

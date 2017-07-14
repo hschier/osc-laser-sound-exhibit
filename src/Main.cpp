@@ -31,8 +31,9 @@ void loop() {
 		if (i >= maxSamplesNum) i = 0;
 	}
 	analogWrite(DAC1, waveformsTable[1][i]);
-	lambda = floor_dist - (sum / r_b);
-	if ()
+	lambda = (sum / r_b);
+	// if switch 8 is in the off position, then use from-floor mode (default)
+	if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
 	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
