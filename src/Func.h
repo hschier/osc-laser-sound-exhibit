@@ -4,6 +4,22 @@
 #include "..\lib\Wire.h"
 #include "LIDARLite.h"
 
+// DIP-8 Switch pins
+#define SWITCH_1_WAVETYPE1 46
+#define SWITCH_2_WAVETYPE2 44
+// 00 - Sine
+// 10 - Triangle
+// 01 - Sawtooth
+// 11 - Square
+#define SWITCH_3_ 42
+#define SWITCH_4_ 40
+#define SWITCH_5_ 38
+#define SWITCH_6_ 36
+#define SWITCH_7_ 34
+#define SWITCH_8_FLOORMODE 32
+
+#define LIDAR_PIN 2
+
 LIDARLite LIDAR;
 
 volatile bool valid_target = 0;
@@ -44,23 +60,23 @@ int LIDARreadPWM() {
     return pulseIn(2, HIGH);
 }
 
-uint32_t Floor_dist(){
-    uint32_t floorDepth = 0;
+uint32_t Find_Floor_dist(){
+    uint32_t fd = 0;
     for (uint32_t v = 0; v < r100_b; v++) {
-        if (readings100[v] > floorDepth) {
-            floorDepth = readings100[v];
+        if (readings100[v] > fd) {
+            fd = readings100[v];
         }
     }
-    return floorDepth;
+    return fd;
 }
 
 void LIDAR_Handler() {
     uint32_t pulsewidth = micros() - Rising_Edge_Time;
     if (digitalRead(2)) {
         Rising_Edge_Time = micros();
-    } else if (pulsewidth > 200 && pulsewidth < 8000) {
-        floor_dist = Floor_dist();
-        if (pulsewidth < floor_dist - 200) {
+    } else if (pulsewidth > 150 && pulsewidth < 8000) {
+        floor_dist = Find_Floor_dist();
+        if (pulsewidth < floor_dist - 150) {
             valid_target = 1;
             r_i++;
             if (r_i >= r_b) r_i = 0;

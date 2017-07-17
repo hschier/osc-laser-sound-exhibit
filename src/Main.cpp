@@ -18,26 +18,29 @@ void setup() {
 	delay(1);
 	pinMode(2, INPUT);
 	pinMode(13, OUTPUT);
-	attachInterrupt(2, LIDAR_Handler, CHANGE);
+	pinMode(SWITCH_1_WAVETYPE1, INPUT);
+	pinMode(SWITCH_2_WAVETYPE2, INPUT);
+	pinMode(SWITCH_8_FLOORMODE, INPUT);
+	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
 }
 
 void loop() {
-	if (valid_target) {
-		uint32_t sample_start = micros();
-		uint32_t sum = 0;
-		for (uint32_t m = 0; m < r_b; m++) {
-			sum += readings[m];
-		}
+	uint32_t sample_start = micros();
+	uint32_t sum = 0;
+	for (uint32_t m = 0; m < r_b; m++) sum += readings[m];
+	if (valid_target || i > 0) { // advance if valid_target OR finish up wave
 		i++;
 		if (i >= maxSamplesNum) i = 0;
-		analogWrite(DAC1, waveformsTable[1][i]);
-		lambda = sum / r_b;
-		freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
-		lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
-		sample_time = lambda_time / 120;
-		while (micros() - sample_start <= sample_time); // wait for next sample
-	} else {
-		i = 0;
-		analogWrite(DAC1, waveformsTable[1][i]);
 	}
+	// change waveform based on switch position
+	uint32_t wavetype = digitalRead(SWITCH_1_WAVETYPE1)
+	                  + digitalRead(SWITCH_2_WAVETYPE2) * 2;
+	analogWrite(DAC1, waveformsTable[wavetype][i]);
+	lambda = (sum / r_b);
+	// if switch 8 is in the off position, then use from-floor mode (default)
+	if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
+	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
+	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
+	sample_time = lambda_time / 120;
+	while (micros() - sample_start <= sample_time); // wait for next sample
 }
