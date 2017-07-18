@@ -34,7 +34,7 @@ volatile uint32_t r_i = 0;
 #define r_b 3
 volatile uint32_t readings[r_b];
 
-// hold 10 (r100_b) readings, but only take 1 reading out of every 100 (r100_freq)
+// hold (r100_b) readings, but only take 1 reading out of every (r100_freq)
 volatile uint32_t r100_i = 0;
 volatile uint32_t r100_c = 0; // readings since last write to readings100
 #define r100_b 30
