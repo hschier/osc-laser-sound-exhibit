@@ -76,7 +76,7 @@ void LIDAR_Handler() {
         Rising_Edge_Time = micros();
     } else if (pulsewidth > 150 && pulsewidth < 8000) {
         floor_dist = Find_Floor_dist();
-        if (pulsewidth < floor_dist - 150) {
+        if (pulsewidth < floor_dist - 170) {
             valid_target = 1;
             r_i++;
             if (r_i >= r_b) r_i = 0;
