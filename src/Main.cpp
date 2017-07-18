@@ -35,9 +35,10 @@ void loop() {
 	uint32_t wavetype = digitalRead(SWITCH_1_WAVETYPE1)
 	                  + digitalRead(SWITCH_2_WAVETYPE2) * 2;
 	analogWrite(DAC1, waveformsTable[wavetype][i]);
-	lambda = ((sum * 8975) / (r_b * 10000)) - 106;
+	lambda = sum / r_b;
 	// if switch 8 is in the off position, then use from-floor mode (default)
 	if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
+	lambda = ((lambda * 8975) / 10000) - 106;
 	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
