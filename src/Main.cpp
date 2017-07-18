@@ -42,6 +42,5 @@ void loop() {
 	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
-	while (micros() - sample_start <= sample_time); // wait for next sample
-	// TODO: change <= to an < and see what happens. it may change calibration
+	while (micros() - sample_start < sample_time); // wait for next sample
 }
