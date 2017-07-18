@@ -14,14 +14,13 @@ void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit
 	analogReadResolution(12); // set the analog input resolution to 12 bit
 	Serial.begin(115200);
-	delay(200);
-	delay(1);
 	pinMode(2, INPUT);
 	pinMode(13, OUTPUT);
 	pinMode(SWITCH_1_WAVETYPE1, INPUT);
 	pinMode(SWITCH_2_WAVETYPE2, INPUT);
 	pinMode(SWITCH_8_FLOORMODE, INPUT);
 	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
+	delay(200);
 }
 
 void loop() {
@@ -36,11 +35,13 @@ void loop() {
 	uint32_t wavetype = digitalRead(SWITCH_1_WAVETYPE1)
 	                  + digitalRead(SWITCH_2_WAVETYPE2) * 2;
 	analogWrite(DAC1, waveformsTable[wavetype][i]);
-	lambda = (sum / r_b);
+	lambda = sum / r_b;
 	// if switch 8 is in the off position, then use from-floor mode (default)
 	if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
+	lambda = ((lambda * 8975) / 10000) - 106; // calibration
 	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
 	while (micros() - sample_start <= sample_time); // wait for next sample
+	// TODO: change <= to an < and see what happens. it may change calibration
 }
