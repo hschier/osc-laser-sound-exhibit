@@ -14,14 +14,13 @@ void setup() {
 	analogWriteResolution(12); // set the analog output resolution to 12 bit
 	analogReadResolution(12); // set the analog input resolution to 12 bit
 	Serial.begin(115200);
-	delay(200);
-	delay(1);
 	pinMode(2, INPUT);
 	pinMode(13, OUTPUT);
 	pinMode(SWITCH_1_WAVETYPE1, INPUT);
 	pinMode(SWITCH_2_WAVETYPE2, INPUT);
 	pinMode(SWITCH_8_FLOORMODE, INPUT);
 	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
+	delay(200);
 }
 
 void loop() {
