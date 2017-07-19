@@ -108,10 +108,10 @@ DueTimer& DueTimer::start(double microseconds){
 		If a period is set, then sets the period and start the timer
 	*/
 
-	if(microseconds > 0)
-		setPeriod(microseconds);
-
-	if(_frequency[timer] <= 0)
+	// if(microseconds > 0)
+	// 	setPeriod(microseconds);
+	//
+	// if(_frequency[timer] <= 0)
 		setFrequency(1);
 
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
@@ -181,7 +181,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	*/
 
 	// Prevent negative frequencies
-	if(frequency <= 0) { frequency = 1; }
+	// if(frequency <= 0) { frequency = 1; }
 
 	// Remember the frequency — see below how the exact frequency is reported instead
 	//_frequency[timer] = frequency;
@@ -189,7 +189,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	// Get current timer configuration
 	Timer t = Timers[timer];
 
-	uint32_t rc = 0xff;
+	uint32_t rc = 0xfff;
 	uint8_t clock;
 
 	// Tell the Power Management Controller to disable
