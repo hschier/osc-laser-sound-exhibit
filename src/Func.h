@@ -82,7 +82,7 @@ void LIDAR_Handler() {
             r_i++;
             if (r_i >= r_b) r_i = 0;
             readings[r_i] = pulsewidth;
-            new_reading = 0; // Serial Debug
+            new_reading = 1; // Serial Debug
         } else {
             valid_target = 0;
         }
