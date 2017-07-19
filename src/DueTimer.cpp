@@ -114,8 +114,8 @@ DueTimer& DueTimer::start(double microseconds){
 	// if(_frequency[timer] <= 0)
 	setFrequency(1);
 	Serial.println("line 116");
-	NVIC_ClearPendingIRQ(Timers[timer].irq);
-	NVIC_EnableIRQ(Timers[timer].irq);
+	//NVIC_ClearPendingIRQ(Timers[timer].irq);
+	//NVIC_EnableIRQ(Timers[timer].irq);
 	Serial.println("line 119");
 	TC_Start(Timers[timer].tc, Timers[timer].channel);
 	Serial.println("line 121");
@@ -189,7 +189,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	// Get current timer configuration
 	Timer t = Timers[timer];
 
-	uint32_t rc = 0xfff;
+	uint32_t rc = 0xffff;
 	uint8_t clock;
 	Serial.println("line 194");
 	// Tell the Power Management Controller to disable
