@@ -112,13 +112,13 @@ DueTimer& DueTimer::start(double microseconds){
 	// 	setPeriod(microseconds);
 	//
 	// if(_frequency[timer] <= 0)
-		setFrequency(1);
-
+	setFrequency(1);
+	Serial.println("line 116");
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
-
+	Serial.println("line 119");
 	TC_Start(Timers[timer].tc, Timers[timer].channel);
-
+	Serial.println("line 121");
 	return *this;
 }
 
@@ -191,7 +191,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 
 	uint32_t rc = 0xfff;
 	uint8_t clock;
-
+	Serial.println("line 194");
 	// Tell the Power Management Controller to disable
 	// the write protection of the (Timer/Counter) registers:
 	pmc_set_writeprotect(false);
@@ -223,12 +223,13 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	// and sets it up with the determined internal clock as clock input.
 	TC_Configure(t.tc, t.channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC | clock);
 	// Reset counter and fire interrupt when RC value is matched:
+	Serial.println("line 226");
 	TC_SetRC(t.tc, t.channel, rc);
 	// Enable the RC Compare Interrupt...
 	t.tc->TC_CHANNEL[t.channel].TC_IER=TC_IER_CPCS;
 	// ... and disable all others.
 	t.tc->TC_CHANNEL[t.channel].TC_IDR=~TC_IER_CPCS;
-
+	Serial.println("line 232");
 	return *this;
 }
 
