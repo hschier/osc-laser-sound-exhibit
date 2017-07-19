@@ -96,4 +96,9 @@ void LIDAR_Handler() {
     }
 }
 
+uint32_t timer_read(uint32_t timer_no) {
+    uint32_t *p = (uint32_t *) (0x40080010 + (0x40 * timer_no));
+    return p[0];
+}
+
 #endif
