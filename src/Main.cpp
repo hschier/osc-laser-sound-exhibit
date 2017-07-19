@@ -42,7 +42,7 @@ void loop() {
 	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
-	if (new_reading) {
+	if (new_reading && Serial.available()) {
 		Serial.printf("L:%u %u %u F:%u ST:%u \n",
 			readings[0], readings[1], readings[2], floor_dist, sample_time);
 		new_reading = 0;
