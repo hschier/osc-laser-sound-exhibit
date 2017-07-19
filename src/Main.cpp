@@ -49,7 +49,6 @@ void loop() {
 			readings[0], readings[1], readings[2], floor_dist, sample_time,
 			timer_read(1));
 		new_reading = 0;
-		while (Serial.available()) Serial.read();
 	}
 	while (micros() - sample_start < sample_time); // wait for next sample
 }
