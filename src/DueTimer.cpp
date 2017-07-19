@@ -63,7 +63,7 @@ DueTimer Timer8(8);
 
 DueTimer::DueTimer(unsigned short _timer) : timer(_timer){
 	/*
-		The constructor of the class DueTimer 
+		The constructor of the class DueTimer
 	*/
 }
 
@@ -110,13 +110,13 @@ DueTimer& DueTimer::start(double microseconds){
 
 	if(microseconds > 0)
 		setPeriod(microseconds);
-	
+
 	if(_frequency[timer] <= 0)
 		setFrequency(1);
 
 	NVIC_ClearPendingIRQ(Timers[timer].irq);
 	NVIC_EnableIRQ(Timers[timer].irq);
-	
+
 	TC_Start(Timers[timer].tc, Timers[timer].channel);
 
 	return *this;
@@ -128,7 +128,7 @@ DueTimer& DueTimer::stop(void){
 	*/
 
 	NVIC_DisableIRQ(Timers[timer].irq);
-	
+
 	TC_Stop(Timers[timer].tc, Timers[timer].channel);
 
 	return *this;
@@ -189,33 +189,34 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	// Get current timer configuration
 	Timer t = Timers[timer];
 
-	uint32_t rc = 0;
+	uint32_t rc = 0xff;
 	uint8_t clock;
 
-	// Tell the Power Management Controller to disable 
+	// Tell the Power Management Controller to disable
 	// the write protection of the (Timer/Counter) registers:
 	pmc_set_writeprotect(false);
 
 	// Enable clock for the timer
 	pmc_enable_periph_clk((uint32_t)t.irq);
 
-	// Find the best clock for the wanted frequency
-	clock = bestClock(frequency, rc);
-
-	switch (clock) {
-	  case TC_CMR_TCCLKS_TIMER_CLOCK1:
-	    _frequency[timer] = (double)VARIANT_MCK / 2.0 / (double)rc;
-	    break;
-	  case TC_CMR_TCCLKS_TIMER_CLOCK2:
-	    _frequency[timer] = (double)VARIANT_MCK / 8.0 / (double)rc;
-	    break;
-	  case TC_CMR_TCCLKS_TIMER_CLOCK3:
-	    _frequency[timer] = (double)VARIANT_MCK / 32.0 / (double)rc;
-	    break;
-	  default: // TC_CMR_TCCLKS_TIMER_CLOCK4
-	    _frequency[timer] = (double)VARIANT_MCK / 128.0 / (double)rc;
-	    break;
-	}
+	clock = TC_CMR_TCCLKS_TIMER_CLOCK1;
+	// // Find the best clock for the wanted frequency
+	// clock = bestClock(frequency, rc);
+	//
+	// switch (clock) {
+	//   case TC_CMR_TCCLKS_TIMER_CLOCK1:
+	//     _frequency[timer] = (double)VARIANT_MCK / 2.0 / (double)rc;
+	//     break;
+	//   case TC_CMR_TCCLKS_TIMER_CLOCK2:
+	//     _frequency[timer] = (double)VARIANT_MCK / 8.0 / (double)rc;
+	//     break;
+	//   case TC_CMR_TCCLKS_TIMER_CLOCK3:
+	//     _frequency[timer] = (double)VARIANT_MCK / 32.0 / (double)rc;
+	//     break;
+	//   default: // TC_CMR_TCCLKS_TIMER_CLOCK4
+	//     _frequency[timer] = (double)VARIANT_MCK / 128.0 / (double)rc;
+	//     break;
+	// }
 
 	// Set up the Timer in waveform mode which creates a PWM
 	// in UP mode with automatic trigger on RC Compare
@@ -237,7 +238,7 @@ DueTimer& DueTimer::setPeriod(double microseconds){
 	*/
 
 	// Convert period in microseconds to frequency in Hz
-	double frequency = 1000000.0 / microseconds;	
+	double frequency = 1000000.0 / microseconds;
 	setFrequency(frequency);
 	return *this;
 }
@@ -260,7 +261,7 @@ double DueTimer::getPeriod(void) const {
 
 
 /*
-	Implementation of the timer callbacks defined in 
+	Implementation of the timer callbacks defined in
 	arduino-1.5.2/hardware/arduino/sam/system/CMSIS/Device/ATMEL/sam3xa/include/sam3x8e.h
 */
 // Fix for compatibility with Servo library

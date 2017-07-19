@@ -2,6 +2,7 @@
 #include "Arduino.h"
 #include "Func.h"
 #include "Waveforms.h"
+#include "DueTimer.h"
 
 int i = 0;
 uint32_t SPEED_OF_SOUND = 343000; // in mm per second
@@ -20,6 +21,7 @@ void setup() {
 	pinMode(SWITCH_2_WAVETYPE2, INPUT);
 	pinMode(SWITCH_8_FLOORMODE, INPUT);
 	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
+	Timer1.start(50000);
 	delay(200);
 }
 
@@ -43,8 +45,9 @@ void loop() {
 	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
 	sample_time = lambda_time / 120;
 	if (new_reading && Serial.available()) {
-		Serial.printf("L:%u %u %u F:%u ST:%u \n",
-			readings[0], readings[1], readings[2], floor_dist, sample_time);
+		Serial.printf("L:%u %u %u F:%u ST:%u T1: %u\n",
+			readings[0], readings[1], readings[2], floor_dist, sample_time,
+			timer_read(1));
 		new_reading = 0;
 		while (Serial.available()) Serial.read();
 	}
