@@ -5,8 +5,9 @@
 #include "DueTimer.h"
 
 int i = 0;
-uint32_t SPEED_OF_SOUND = 343000; // in mm per second
-uint32_t lambda; // in mm
+float ns_per_tick = 23.809524; // 1/42000000Hz
+uint32_t SPEED_OF_SOUND = 323000; // mm per second
+uint32_t lambda; // in um
 uint32_t freq = 0; // frequency in mHz
 uint32_t lambda_time; // in uS
 uint32_t sample_time; // in Hz
@@ -26,36 +27,24 @@ void setup() {
 }
 
 void loop() {
-	while(true) {
-		uint32_t starttime = timer_read(1);
-		delay(10000);
-		uint32_t endtime = timer_read(1);
-		Serial.printf("diff: %u abs: %u\n", endtime-starttime, endtime);
-	}
-	uint32_t sample_start = micros();
+	uint32_t sample_start = timer_read(1);
 	uint32_t sum = 0;
-	for (uint32_t m = 0; m < r_b; m++) sum += readings[m];
-	if (valid_target || i > 0) { // advance if valid_target OR finish up wave
-		i++;
-		if (i >= maxSamplesNum) i = 0;
-	}
+	for (uint32_t j = 0; j < r_b; j++) sum += readings[j];
 	// change waveform based on switch position
 	uint32_t wavetype = digitalRead(SWITCH_1_WAVETYPE1)
 	                  + digitalRead(SWITCH_2_WAVETYPE2) * 2;
 	analogWrite(DAC1, waveformsTable[wavetype][i]);
 	lambda = sum / r_b;
 	// if switch 8 is in the off position, then use from-floor mode (default)
-	if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
-	lambda = ((lambda * 10642) / 10000) - 169; // calibration
-	freq = (1000 * SPEED_OF_SOUND) / lambda; // mHz
-	lambda_time = (1000000 * lambda) / SPEED_OF_SOUND;
+	//if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
+	lambda_time = (1000 * lambda) / SPEED_OF_SOUND; // in ticks
 	sample_time = lambda_time / 120;
 	if (new_reading && Serial.available()) {
-		Serial.printf("L:%u %u %u F:%u ST:%u T1: %u\n",
+		Serial.printf("L:%u %u %u F:%u ST:%u la:%u lt:%u\n",
 			readings[0], readings[1], readings[2], floor_dist, sample_time,
-			timer_read(1));
+			lambda, lambda_time);
 		new_reading = 0;
 		while(Serial.available()) Serial.read();
 	}
-	while (micros() - sample_start < sample_time); // wait for next sample
+	while (timer_read(1) - sample_start < sample_time); // wait for next sample
 }

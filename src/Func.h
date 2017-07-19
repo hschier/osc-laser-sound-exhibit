@@ -41,6 +41,13 @@ volatile uint32_t r100_c = 0; // readings since last write to readings100
 #define r100_b 30
 #define r100_freq 200
 volatile uint32_t readings100[r100_b];
+// 1 unit = 1/42mm
+
+
+uint32_t timer_read(uint32_t timer_no) {
+    uint32_t *p = (uint32_t *) (0x40080010 + (0x40 * timer_no));
+    return p[0];
+}
 
 int LIDARreadI2C() {
     LIDAR_read_count++;
@@ -71,13 +78,14 @@ uint32_t Find_Floor_dist(){
     return fd;
 }
 
+// 1 unit = 1/42mm
 void LIDAR_Handler() {
-    uint32_t pulsewidth = micros() - Rising_Edge_Time;
+    uint32_t pulsewidth = timer_read(1) - Rising_Edge_Time;
     if (digitalRead(2)) {
-        Rising_Edge_Time = micros();
-    } else if (pulsewidth > 150 && pulsewidth < 8000) {
+        Rising_Edge_Time = timer_read(1);
+    } else if (pulsewidth > 150*42 && pulsewidth < 8000*42) {
         floor_dist = Find_Floor_dist();
-        if (pulsewidth < floor_dist - 170) {
+        if (pulsewidth < floor_dist - 150*42) {
             valid_target = 1;
             r_i++;
             if (r_i >= r_b) r_i = 0;
@@ -96,9 +104,5 @@ void LIDAR_Handler() {
     }
 }
 
-uint32_t timer_read(uint32_t timer_no) {
-    uint32_t *p = (uint32_t *) (0x40080010 + (0x40 * timer_no));
-    return p[0];
-}
 
 #endif
