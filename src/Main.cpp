@@ -29,7 +29,11 @@ void setup() {
 void loop() {
 	uint32_t sample_start = timer_read(1);
 	uint32_t sum = 0;
-	for (uint32_t j = 0; j < r_b; j++) sum += readings[j];
+	for (uint32_t m = 0; m < r_b; m++) sum += readings[m];
+	if (valid_target || i > 0) { // advance if valid_target OR finish up wave
+		i++;
+		if (i >= maxSamplesNum) i = 0;
+	}
 	// change waveform based on switch position
 	uint32_t wavetype = digitalRead(SWITCH_1_WAVETYPE1)
 	                  + digitalRead(SWITCH_2_WAVETYPE2) * 2;
