@@ -22,6 +22,7 @@
 
 LIDARLite LIDAR;
 
+volatile bool new_reading = 0; // Serial Debug
 volatile bool valid_target = 0;
 volatile uint32_t floor_dist = 0;
 
@@ -81,6 +82,7 @@ void LIDAR_Handler() {
             r_i++;
             if (r_i >= r_b) r_i = 0;
             readings[r_i] = pulsewidth;
+            new_reading = 0; // Serial Debug
         } else {
             valid_target = 0;
         }
