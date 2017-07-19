@@ -46,6 +46,7 @@ void loop() {
 		Serial.printf("L:%u %u %u F:%u ST:%u \n",
 			readings[0], readings[1], readings[2], floor_dist, sample_time);
 		new_reading = 0;
+		while (Serial.available()) Serial.read();
 	}
 	while (micros() - sample_start < sample_time); // wait for next sample
 }
