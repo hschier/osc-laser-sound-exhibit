@@ -189,7 +189,7 @@ DueTimer& DueTimer::setFrequency(double frequency){
 	// Get current timer configuration
 	Timer t = Timers[timer];
 
-	uint32_t rc = 0xffff;
+	uint32_t rc = 0xffffffff;
 	uint8_t clock;
 	Serial.println("line 194");
 	// Tell the Power Management Controller to disable

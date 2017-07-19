@@ -26,6 +26,12 @@ void setup() {
 }
 
 void loop() {
+	while(true) {
+		uint32_t starttime = timer_read(1);
+		delay(10000);
+		uint32_t endtime = timer_read(1);
+		Serial.printf("diff: %u abs: %u", endtime-starttime, endtime);
+	}
 	uint32_t sample_start = micros();
 	uint32_t sum = 0;
 	for (uint32_t m = 0; m < r_b; m++) sum += readings[m];
