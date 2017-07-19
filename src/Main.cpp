@@ -21,7 +21,7 @@ void setup() {
 	pinMode(SWITCH_2_WAVETYPE2, INPUT);
 	pinMode(SWITCH_8_FLOORMODE, INPUT);
 	attachInterrupt(LIDAR_PIN, LIDAR_Handler, CHANGE);
-	Timer1.start(50000);
+	//Timer1.start(50000);
 	delay(200);
 }
 
