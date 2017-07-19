@@ -41,9 +41,9 @@ void loop() {
 	lambda = sum / r_b;
 	// if switch 8 is in the off position, then use from-floor mode (default)
 	//if (!digitalRead(SWITCH_8_FLOORMODE)) lambda = floor_dist - lambda;
-	lambda_time = (1000 * lambda) / SPEED_OF_SOUND; // in ticks
+	lambda_time = (10000 * lambda) / (SPEED_OF_SOUND/100); // in ticks
 	sample_time = lambda_time / 120;
-	if (new_reading && Serial.available()) {
+	if (Serial.available()) {
 		Serial.printf("L:%u %u %u F:%u ST:%u la:%u lt:%u\n",
 			readings[0], readings[1], readings[2], floor_dist, sample_time,
 			lambda, lambda_time);
