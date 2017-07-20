@@ -31,7 +31,7 @@ volatile uint32_t Rising_Edge_Time = 0;
 
 // hold the past few readings
 volatile uint32_t r_i = 0;
-#define r_b 3
+#define r_b 4
 volatile uint32_t readings[r_b];
 
 // hold (r100_b) readings, but only take 1 reading out of every (r100_freq)
