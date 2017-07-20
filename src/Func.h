@@ -45,7 +45,7 @@ volatile uint32_t readings100[r100_b];
 
 
 uint32_t timer_read(uint32_t timer_no) {
-    uint32_t *p = (uint32_t *) (0x40080010 + (0x40 * timer_no));
+    volatile uint32_t* p = (uint32_t *) (0x40080010 + (0x40 * timer_no));
     return p[0];
 }
 
@@ -83,7 +83,7 @@ void LIDAR_Handler() {
     uint32_t pulsewidth = timer_read(1) - Rising_Edge_Time;
     if (digitalRead(2)) {
         Rising_Edge_Time = timer_read(1);
-    } else if (pulsewidth > 150*42 && pulsewidth < 8000*42) {
+    } else if (pulsewidth > 200*42 && pulsewidth < 8000*42) {
         floor_dist = Find_Floor_dist();
         if (pulsewidth < floor_dist - 150*42) {
             valid_target = 1;
