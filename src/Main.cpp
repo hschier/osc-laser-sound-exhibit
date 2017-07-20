@@ -44,9 +44,11 @@ void loop() {
 	lambda_time = (10000 * lambda) / (SPEED_OF_SOUND/100); // in ticks
 	sample_time = lambda_time / 120;
 	if (Serial.available()) {
-		Serial.printf("L:%u %u %u F:%u ST:%u la:%u lt:%u i:%u diff:%u\n",
+		Serial.printf("readings:%u %u %u floor_dist:%u sample_time:%u\
+			lambda:%u lambda_time:%u i:%u timer_read-sample_start:%u\n",
 		readings[0], readings[1], readings[2], floor_dist, sample_time,
 		lambda, lambda_time, i, timer_read(1) - sample_start);
+		// flush serial
 		while(Serial.available()) Serial.read();
 	}
 	while (timer_read(1) - sample_start < sample_time); // wait for next sample
