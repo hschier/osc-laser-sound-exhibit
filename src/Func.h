@@ -68,7 +68,10 @@ int LIDARreadPWM() {
 }
 
 uint32_t Find_Floor_dist(){
+    // TODO: improve this function
+    // fd is the max distance seen in readings100
     uint32_t fd = 0;
+    // iterate through readings100, store the largest value in fd
     for (uint32_t v = 0; v < r100_b; v++) {
         if (readings100[v] > fd) {
             fd = readings100[v];
@@ -79,28 +82,45 @@ uint32_t Find_Floor_dist(){
 
 // 1 unit = 1/42mm
 void LIDAR_Handler() {
+    // assume that it is a falling edge, and save the timestamp
     uint32_t pulsewidth = timer_read(1) - Rising_Edge_Time;
+
+    // if it's a rising edge
     if (digitalRead(2)) {
+        // save the timestamp for later to make a pulsewidth on a falling edge
         Rising_Edge_Time = timer_read(1);
-    } else if (pulsewidth > 200*42 && pulsewidth < 8000*42) {
-        floor_dist = Find_Floor_dist();
-        if (pulsewidth < floor_dist - 170*42) {
-            valid_target = 1;
-            r_i++;
-            if (r_i >= r_b) r_i = 0;
-            readings[r_i] = pulsewidth;
-        } else {
-            valid_target = 0;
-        }
-        r100_c++;
-        if (r100_c >= r100_freq) {
-            r100_c = 0;
-            r100_i++;
-            if (r100_i >= r100_b) r100_i = 0;
-            readings100[r100_i] = pulsewidth;
-        }
+        // forget about the stored pulsewidth, it will be overwriten later
+        return;
+    }
+
+    // we know it's a falling edge, now discard values out of range
+    // 1 unit of pulsewidth is 1/42 of a mm
+    if (pulsewidth < 200*42 || pulsewidth > 8000*42) return;
+
+    // store the pulse in the readings100 array for wall detection
+    // we store any valid value
+    r100_c++;
+    if (r100_c >= r100_freq) {
+        r100_c = 0;
+        r100_i++;
+        if (r100_i >= r100_b) r100_i = 0;
+        readings100[r100_i] = pulsewidth;
+    }
+
+    // find the floor distance to discard more invalid readings
+    floor_dist = Find_Floor_dist();
+    // check if the value is far enough from the floor
+    if (pulsewidth < floor_dist - 170*42) {
+        // an object is detected, so set the valid_target global
+        valid_target = 1;
+        // store the pulse in readings
+        r_i++;
+        if (r_i >= r_b) r_i = 0;
+        readings[r_i] = pulsewidth;
+    } else {
+        // the wall is detected, so no valid target
+        valid_target = 0;
     }
 }
-
 
 #endif
