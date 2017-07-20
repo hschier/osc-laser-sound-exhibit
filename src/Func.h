@@ -38,7 +38,7 @@ volatile uint32_t readings[r_b];
 // hold (r100_b) readings, but only take 1 reading out of every (r100_freq)
 volatile uint32_t r100_i = 0;
 volatile uint32_t r100_c = 0; // readings since last write to readings100
-#define r100_b 30
+#define r100_b 20
 #define r100_freq 200
 volatile uint32_t readings100[r100_b];
 // 1 unit = 1/42mm
